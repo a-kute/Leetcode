@@ -1,36 +1,36 @@
+import java.util.HashMap;
 import java.util.HashSet;
 
 public class LongestRepeatingCharacterReplacement {
     public int characterReplacement(String s, int k) {
-        int changeLoc = 0;
-        int pointer1 = 0;
-        HashSet<Character> set = new HashSet<>();
+        HashMap<Character,Integer> map = new HashMap<>();
         int count = 0;
+        int mostCommon =0;
         int max = 0;
-        //set.add(s.charAt(0));
-
-        for(int i = 0; i<s.length();i++) {
-            if(set.contains(s.charAt(i))){
-                if(i-pointer1+1>max) max = i-pointer1+1;
-            }else{
-                if(count == 0) {
-                    changeLoc = i;
+        int end = 0;
+        int start = 0;
+        mostCommon = 0;
+        map = new HashMap<>();
+        while(end<s.length()) {
+                char current = s.charAt(end);
+                map.put(current,map.getOrDefault(current,0)+1);
+                int ma = 0;
+                for(char key : map.keySet()) {
+                    if(map.get(key)>ma) {
+                        ma = map.get(key);
+                    }
                 }
-                count++;
-                if(count>k) {
-                    set.add(s.charAt(i));
+                mostCommon = ma;
+                if(end-start+1-mostCommon>k){
+                    map.put(s.charAt(start),map.getOrDefault(s.charAt(start),1)-1);
+                    start++;
+                    end++;
+                } else {
+                    if(end-start+1 > max) max = end-start+1;
+                    end++;
                 }
-            }
-            if(set.size()>1) {
-                pointer1 = changeLoc;
-                i = changeLoc+1;
-                count=0;
-                set = new HashSet<>();
-                if(i<s.length())
-                set.add(s.charAt(i));
-            }
 
-            if(i-pointer1+1>max) max = i-pointer1+1;
+
         }
         return max;
 
